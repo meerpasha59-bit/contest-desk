@@ -18,6 +18,8 @@ export interface NavigationState {
   path?: string;
   publicPath?: string;
   threadId?: string;
+  /** Contest selected on the board, if any. */
+  contestId?: string;
 }
 
 export function useNavigationState() {
@@ -64,7 +66,9 @@ function matchesPathPrefix(pathname: string, prefix: string): boolean {
 
 export function navigationStateForPath(pathname: string): NavigationState {
   const threadId = threadIdFromPath(pathname);
+  const contestId = pathname.match(/^\/board\/([^/]+)/)?.[1];
   return {
+    ...(contestId ? { contestId: decodeURIComponent(contestId) } : {}),
     view: viewForPath(pathname),
     path: pathname,
     publicPath: appPathFromLocalRoute(pathname),
@@ -75,6 +79,7 @@ export function navigationStateForPath(pathname: string): NavigationState {
 function viewForPath(pathname: string): string {
   if (isChatPathname(pathname)) return "chat";
   if (pathname === HOME_PATH) return "home";
+  if (pathname.startsWith("/board")) return "board";
   if (pathname.startsWith("/database")) return "database";
   if (pathname.startsWith("/extensions")) return "extensions";
   if (pathname.startsWith("/observability")) return "observability";
@@ -93,6 +98,8 @@ function pathForView(view?: string): string {
       return NEW_CHAT_PATH;
     case "home":
       return HOME_PATH;
+    case "board":
+      return "/board";
     case "database":
       return "/database";
     case "extensions":
@@ -112,6 +119,9 @@ function pathForView(view?: string): string {
 
 export function pathForCommand(command: any): string {
   const path = pathForView(command?.view);
+  if (command?.view === "board" && typeof command?.contestId === "string" && command.contestId) {
+    return `/board/${encodeURIComponent(command.contestId)}`;
+  }
   if (command?.view !== "chat" && command?.view !== "ask") return path;
   const threadId =
     typeof command?.threadId === "string" ? command.threadId.trim() : "";

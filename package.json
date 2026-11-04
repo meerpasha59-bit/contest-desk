@@ -1,8 +1,8 @@
 {
-  "name": "app",
-  "displayName": "App",
+  "name": "contest-desk",
+  "displayName": "Contest Desk",
   "private": true,
-  "description": "Workspace app for App.",
+  "description": "Contest Desk: a hackathon/bounty board shared by you and an AI agent, built on Agent-Native.",
   "type": "module",
   "scripts": {
     "migrate:production": "tsx scripts/migrate-production.ts",
@@ -116,5 +116,6 @@
       "coreVersion": "0.223.0",
       "shape": "standalone"
     }
-  }
+  },
+  "license": "MIT"
 }

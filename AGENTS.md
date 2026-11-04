@@ -1,4 +1,19 @@
-# Chat — Agent Guide
+# Contest Desk — Agent Guide
+
+## Contest Desk domain
+
+Route `/board` (selected contest `/board/<id>`; navigation state `view: "board"`, `contestId`). Data: `contests`, `contest_steps` (server/db/schema.ts), always scoped to the signed-in user's email. Status machine in `shared/contest-logic.ts` (`STATUS_TRANSITIONS`). Deadlines are stored as UTC ISO plus the organiser's IANA zone; never do zone math by hand.
+
+| Action | Use |
+|---|---|
+| `list-contests` / `get-contest` | Read the board / one contest with deadline in displayZone |
+| `add-contest` / `update-contest` / `delete-contest` | Write; update also moves status and recomputes fit |
+| `generate-plan` / `add-step` / `toggle-step` | Checklist |
+| `next-up` | What to work on now |
+| `convert-deadline` / `score-fit` | Deterministic helpers |
+| `export-tracker` / `seed-demo-contests` | Markdown export / sample data |
+
+# Chat starter — Agent Guide
 
 Chat is the minimal chat-first agent-native app. `/` redirects to shared sign-in, then `/home`, the editable Get started page. Chat lives at `/chat`; new chats start there. Actions carry capabilities; screens exist only for durable workflows.
 

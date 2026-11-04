@@ -20,6 +20,7 @@ import {
   IconLayoutSidebarLeftExpand,
   IconLoader2,
   IconSearch,
+  IconTrophy,
 } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
@@ -115,6 +116,30 @@ function persistActiveThreadId(threadId: string) {
   try {
     localStorage.setItem(CHAT_ACTIVE_THREAD_KEY, threadId);
   } catch {}
+}
+
+function BoardNavLink({ collapsed }: { collapsed: boolean }) {
+  const location = useLocation();
+  const active = location.pathname.startsWith("/board");
+  return (
+    <div className="px-2">
+      <Link
+        to="/board"
+        aria-current={active ? "page" : undefined}
+        aria-label={collapsed ? "Contest board" : undefined}
+        className={cn(
+          "flex items-center text-sidebar-accent-foreground transition-colors hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+          active && "bg-sidebar-accent",
+          collapsed
+            ? "size-8 justify-center rounded-md"
+            : "h-8 w-full gap-3 rounded-lg px-3 text-sm font-medium",
+        )}
+      >
+        <IconTrophy className="size-4 shrink-0" strokeWidth={1.8} />
+        <span className={collapsed ? "sr-only" : "truncate"}>Contest board</span>
+      </Link>
+    </div>
+  );
 }
 
 function HomeNavLink({ collapsed }: { collapsed: boolean }) {
@@ -408,6 +433,7 @@ export function Sidebar({
         )}
       >
         <HomeNavLink collapsed={collapsed} />
+        <BoardNavLink collapsed={collapsed} />
         <ChatThreadsSection collapsed={collapsed} />
       </nav>
 
